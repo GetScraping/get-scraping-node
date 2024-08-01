@@ -1,5 +1,5 @@
 {
-  "name": "get-scraping-node",
+  "name": "get-scraping",
   "version": "1.0.0",
   "description": "GetScraping.com NodeJS client library",
   "main": "./dist/index.js",
