@@ -1,0 +1,37 @@
+{
+  "name": "get-scraping-node",
+  "version": "1.0.0",
+  "description": "GetScraping.com NodeJS client library",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "package.json"
+  ],
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GetScraping/get-scraping-node.git"
+  },
+  "author": "GetScraping.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GetScraping/get-scraping-node/issues"
+  },
+  "homepage": "https://github.com/GetScraping/get-scraping-node#readme",
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "tsup": "^8.2.3",
+    "typescript": "^5.5.4"
+  }
+}
