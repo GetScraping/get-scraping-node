@@ -79,13 +79,13 @@ export class GetScrapingClient {
     }
 }
 
-async function fetchRetry(input: RequestInfo | URL, retry_config?: RetryConfig, init?: RequestInit | undefined) {
+async function fetchRetry(url: string, retry_config?: RetryConfig, init?: RequestInit | undefined): Promise<Response> {
     let retriesRemaining = Math.max(retry_config.num_retries, 1);
     while (retriesRemaining > 0) {
         try {
-            const res = await fetch(input, init);
+            const res = await fetch(url, init);
             if (retry_config.success_status_codes) {
-                if (retry_config.success_status_codes.includes[res.status]) {
+                if (retry_config.success_status_codes.includes(res.status)) {
                     return res;
                 } else {
                     await sleep(RETRY_DELAY_MS)
@@ -105,6 +105,7 @@ async function fetchRetry(input: RequestInfo | URL, retry_config?: RetryConfig, 
             retriesRemaining -= 1;
         }
     }
+    throw new Error(`GET_SCRAPING: UNABLE TO FETCH ${url}`)
 }
 
 function sleep(delay: number) {
