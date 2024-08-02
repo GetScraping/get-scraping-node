@@ -1,5 +1,5 @@
 import fetch, { Response, RequestInit, RequestInfo } from 'node-fetch';
-import { GetScrapingParams } from './models';
+import { GetScrapingParams, RetryConfig } from './models';
 
 const RETRY_DELAY_MS = 200;
 
@@ -48,7 +48,7 @@ export class GetScrapingClient {
 
     private async request(url: string, params: GetScrapingParams): Promise<Response> {
         if (params?.retry_config != null) {
-            return fetchRetry(url, params?.retry_config?.num_retries, {
+            return fetchRetry(url, params?.retry_config, {
                 method: 'POST',
                 headers: {
                     'X-API-Key': this.api_key,
@@ -79,11 +79,21 @@ export class GetScrapingClient {
     }
 }
 
-async function fetchRetry(input: RequestInfo | URL, retries?: number, init?: RequestInit | undefined) {
-    let retriesRemaining = Math.max(retries, 1);
+async function fetchRetry(input: RequestInfo | URL, retry_config?: RetryConfig, init?: RequestInit | undefined) {
+    let retriesRemaining = Math.max(retry_config.num_retries, 1);
     while (retriesRemaining > 0) {
         try {
-            return await fetch(input, init);
+            const res = await fetch(input, init);
+            if (retry_config.success_status_codes) {
+                if (retry_config.success_status_codes.includes[res.status]) {
+                    return res;
+                } else {
+                    await sleep(RETRY_DELAY_MS)
+                    if (retriesRemaining <= 1) {
+                        return res;
+                    };
+                }
+            }
         }
         catch (err) {
             await sleep(RETRY_DELAY_MS)
