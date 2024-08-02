@@ -1,4 +1,5 @@
-import fetch, { Response, RequestInit, RequestInfo } from 'node-fetch';
+import fetch, { Response, RequestInit } from 'node-fetch';
+import * as cheerio from 'cheerio';
 import { GetScrapingParams, RetryConfig } from './models';
 
 const RETRY_DELAY_MS = 200;
@@ -85,15 +86,26 @@ async function fetchRetry(url: string, retry_config?: RetryConfig, init?: Reques
         try {
             const res = await fetch(url, init);
             if (retry_config.success_status_codes) {
-                if (retry_config.success_status_codes.includes(res.status)) {
-                    return res;
-                } else {
+                if (!retry_config.success_status_codes.includes(res.status)) {
                     await sleep(RETRY_DELAY_MS)
                     if (retriesRemaining <= 1) {
                         return res;
                     };
+                    continue;
                 }
             }
+            if (retry_config.success_selector && retry_config.success_selector != '') {
+                const $ = cheerio.load(await res.text());
+                const maybeSuccess = $().find(retry_config.success_selector);
+                if (maybeSuccess.length === 0) {
+                    await sleep(RETRY_DELAY_MS)
+                    if (retriesRemaining <= 1) {
+                        return res;
+                    };
+                    continue;
+                }
+            }
+            return res;
         }
         catch (err) {
             await sleep(RETRY_DELAY_MS)
