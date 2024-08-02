@@ -1,6 +1,6 @@
 {
   "name": "get-scraping",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "GetScraping.com NodeJS client library",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -33,5 +33,8 @@
     "ts-node": "^10.9.2",
     "tsup": "^8.2.3",
     "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
   }
 }
