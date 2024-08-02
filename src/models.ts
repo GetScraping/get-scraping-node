@@ -14,7 +14,7 @@ export type GetScrapingParams = {
      * The the payload to include in a post request.
      * Only used when method = 'POST'
      */
-    body: string;
+    body?: string;
 
     /**
      * When defined, your GetScraping deployment will route the request through a browser
