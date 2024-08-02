@@ -1,4 +1,5 @@
-import { GetScrapingParams } from "./models";
+import fetch, { Response, RequestInit, RequestInfo } from 'node-fetch';
+import { GetScrapingParams } from './models';
 
 const RETRY_DELAY_MS = 200;
 
