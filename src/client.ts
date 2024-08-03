@@ -70,10 +70,10 @@ export class GetScrapingClient {
     /**
      * scrape will make a request through your GetScraping deployed API.
      * @param params GetScrapingParams
-     * @returns 
+     * @returns Promise<Response>
      */
     public scrape(params: GetScrapingParams) {
-        if (params.js_rendering_options != null) {
+        if (params.js_rendering_options?.render_js) {
             return this.request(`${this.api_url}/scrape_with_js`, params);
         }
         return this.request(`${this.api_url}/scrape`, params);
