@@ -61,6 +61,11 @@ export type GetScrapingParams = {
 
 export type JavascriptRenderingOptions = {
     /**
+     * Whether to render javascript or not
+     * Default false
+     */
+    render_js: boolean;
+    /**
     * Whether to capture a screenshot
     * The URL of the screenshot in s3 will be returned in the SCREENSHOT_LOCATION header in addition to the HTML.
     * Only valid when render_js is true.
