@@ -1,6 +1,6 @@
 {
   "name": "get-scraping",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "GetScraping.com NodeJS client library",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
