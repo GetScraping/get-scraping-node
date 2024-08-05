@@ -30,12 +30,12 @@ export class GetScrapingClient {
      * The api_url for your GetScraping Deployment
      * You can find this at https://getscraping.com/dashboard
      */
-    readonly api_url: string;
+    private api_url: string;
     /**
      * The api_key for your GetScraping Deployment
      * You can find this at https://getscraping.com/dashboard
      */
-    readonly api_key: string;
+    private api_key: string;
 
     /**
      * 
@@ -81,12 +81,20 @@ export class GetScrapingClient {
 }
 
 async function fetchRetry(url: string, retry_config?: RetryConfig, init?: RequestInit | undefined): Promise<Response> {
-    let retriesRemaining = Math.max(retry_config.num_retries, 1);
+    let retriesRemaining = Math.max(retry_config?.num_retries ?? 1, 1);
     while (retriesRemaining > 0) {
         try {
             const res = await fetch(url, init);
             if (retry_config.success_status_codes) {
                 if (!retry_config.success_status_codes.includes(res.status)) {
+                    await sleep(RETRY_DELAY_MS)
+                    if (retriesRemaining <= 1) {
+                        return res;
+                    };
+                    continue;
+                }
+            } else {
+                if (![200,302].includes(res.status)) {
                     await sleep(RETRY_DELAY_MS)
                     if (retriesRemaining <= 1) {
                         return res;
@@ -117,7 +125,7 @@ async function fetchRetry(url: string, retry_config?: RetryConfig, init?: Reques
             retriesRemaining -= 1;
         }
     }
-    throw new Error(`GET_SCRAPING: UNABLE TO FETCH ${url}`)
+    throw new Error(`GET_SCRAPING: UNABLE TO FETCH URL`)
 }
 
 function sleep(delay: number) {

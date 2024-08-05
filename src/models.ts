@@ -42,11 +42,22 @@ export type GetScrapingParams = {
     omit_default_headers?: boolean;
 
     /**
-     * If you've configured your GetScraping deployment to use an external proxy 
-     * (either through us or another provider) setting this to true will
-     * use that proxy pool rather than the default proxies in the GetScraping deployment.
+     * If you've configured your GetScraping deployment to use an external ISP proxy 
+     * setting this to true will use that proxy pool for the request.
      */
-    use_external_proxy?: boolean;
+    use_isp_proxy?: boolean;
+
+    /**
+     * If you've configured your GetScraping deployment to use an external residential proxy 
+     * setting this to true will use that proxy pool for the request.
+     */
+    use_residential_proxy?: boolean;
+
+    /**
+     * If you've configured your GetScraping deployment to use any other proxy 
+     * setting this to true will use that proxy pool for the request.
+     */
+    use_other_proxy?: boolean;
 
     /**
      * Configuration for when and how to retry a request
@@ -104,6 +115,13 @@ export type JavascriptRenderingOptions = {
      * Only valid when render_js is true.
      */
     intercept_request?: InterceptRequestParams;
+
+    /**
+     * Configuration for the programmable browser
+     * With this defined you can define a set of actions to be performed depending on the javascript that is 
+     * loaded on the page. See https://getscraping.com/docs/programmable-browser for more details.
+     */
+    programmable_browser?: ProgrammableBrowserOptions;
 }
 
 /**
@@ -159,3 +177,31 @@ export type RetryConfig = {
     success_selector?: string;
 }
 
+/**
+ * ProgrammableBrowserOptions define a set of actions to be performed on a page.
+ * They are defined in the order they should be performed. The actions are performed once any of the
+ * wait conditions are met (wait_for_selector, wait_millis, wait_for_request from JavascriptRenderingOptions).
+ */
+export type ProgrammableBrowserOptions = {
+    /**
+     * The actions to perform on the page
+     */
+    actions: Array<ProgrammableBrowserAction>;
+}
+
+export type ProgrammableBrowserAction = {
+    /**
+     * The type of action to perform
+     */
+    type: 'click' | 'hover' | 'wait_for_selector' | 'wait_for_request' | 'wait_for_navigation' | 'scroll';
+
+    /**
+     * The selector that triggers the action, and the target of the action if the type is click, hover, or scroll
+     */
+    selector?: string;
+
+    /**
+     * The amount of time to wait for the action to complete
+     */
+    wait_millis?: number;
+}
