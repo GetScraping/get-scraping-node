@@ -11,7 +11,7 @@ export type GetScrapingParams = {
     method: 'GET' | 'POST';
 
     /**
-     * The the payload to include in a post request.
+     * The payload to include in a post request.
      * Only used when method = 'POST'
      */
     body?: string;
@@ -42,22 +42,29 @@ export type GetScrapingParams = {
     omit_default_headers?: boolean;
 
     /**
-     * If you've configured your GetScraping deployment to use an external ISP proxy 
-     * setting this to true will use that proxy pool for the request.
+     * Set to true to route requests through our ISP proxies.
+     * Note this may incur additional API credit usage.
      */
     use_isp_proxy?: boolean;
 
     /**
-     * If you've configured your GetScraping deployment to use an external residential proxy 
-     * setting this to true will use that proxy pool for the request.
+     * Set to true to route requests through our residential proxies.
+     * Note this may incur additional API credit usage.
      */
     use_residential_proxy?: boolean;
 
     /**
-     * If you've configured your GetScraping deployment to use any other proxy 
-     * setting this to true will use that proxy pool for the request.
+     * Set to true to route requests through our mobile proxies.
+     * Note this may incur additional API credit usage.
      */
-    use_other_proxy?: boolean;
+    use_mobile_proxy?: boolean;
+
+    /**
+     * If you'd like to use your own proxy server for this request, include the url here.
+     * If necessary include any authentication inforamtion in the format:
+     * `http://${user}:${password}@${proxyUrl}:${proxyPort}`
+     */
+    use_own_proxy?: string;
 
     /**
      * Configuration for when and how to retry a request
@@ -107,7 +114,7 @@ export type JavascriptRenderingOptions = {
      * ie if you see that when https://example.com is loading it makes a request to https://example.com/api/some_endpoint/...
      * And for some reason you're not able to make that request directly, you can define:
      * intercept_request: {
-     *  url_regex: '\/api\/some_endpoint',
+     *  intercepted_url_regex: '\/api\/some_endpoint',
      *  return_json: true,
      * }
      * to directly return the json response from that endpoint.
@@ -119,7 +126,7 @@ export type JavascriptRenderingOptions = {
     /**
      * Configuration for the programmable browser
      * With this defined you can define a set of actions to be performed depending on the javascript that is 
-     * loaded on the page. See https://getscraping.com/docs/programmable-browser for more details.
+     * loaded on the page. See https://docs.getscraping.com for more details.
      */
     programmable_browser?: ProgrammableBrowserOptions;
 }
@@ -141,7 +148,13 @@ export type InterceptRequestParams = {
      * The regex matching the url to be intercepted - be as specific as possible, if the regex matches
      * multiple requests, the first will be returned unless request number is also defined.
      */
-    url_regex: string;
+    intercepted_url_regex: string;
+
+    /**
+     * The method of the request to intercept. 
+     * Default to 'GET'
+     */
+    intercepted_url_method?: 'GET' | 'POST' | 'PUT';
 
     /**
      * If the url regex will match multiple requests when loading a page, define the request number
@@ -151,7 +164,8 @@ export type InterceptRequestParams = {
     request_number?: number;
 
     /**
-     * True if the response should be parsed and returned as JSON
+     * True if the response should be parsed and returned as JSON.
+     * Defaults to false.
      */
     return_json?: boolean;
 }
@@ -165,7 +179,7 @@ export type RetryConfig = {
 
     /**
      * The status codes that will render the request successful
-     * default: [200,203]
+     * default: [200-302]
      */
     success_status_codes?: Array<number>;
 
@@ -180,7 +194,8 @@ export type RetryConfig = {
 /**
  * ProgrammableBrowserOptions define a set of actions to be performed on a page.
  * They are defined in the order they should be performed. The actions are performed once any of the
- * wait conditions are met (wait_for_selector, wait_millis, wait_for_request from JavascriptRenderingOptions).
+ * wait conditions are met (wait_for_selector, wait_millis, wait_for_request from the JavascriptRenderingOptions).
+ * The actions are only performed if the selector matches, otherwise the next action with a matching selector will be executed.
  */
 export type ProgrammableBrowserOptions = {
     /**

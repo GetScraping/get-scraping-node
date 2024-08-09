@@ -5,45 +5,33 @@ import { GetScrapingParams, RetryConfig } from './models';
 const RETRY_DELAY_MS = 200;
 
 /**
- * Use the GetScrapingClient to make requests to your GetScraping Deployment.
+ * Use the GetScrapingClient to make requests to GetScraping.com's API.
  * Usage:
- * const client = new GetScrapingClient('YOUR_API_URL', 'YOUR_API_KEY');
+ * const client = new GetScrapingClient('YOUR_API_KEY');
  * const result = await client.scrape({
  *  url: 'https://example.com',
- *  render_js: true,
  *  wait_for_request: '.*api\.example\.com.*data'
  * });
  * // Load the html with cheerio
- * const $ = cheerio.load(result.body);
+ * const $ = cheerio.load(await result.text());
  * // Fetch the headers returned from the scraped url
  * const headers = result.headers;
  * // Grab the returned cookies and use them in subsequent requests
  * const cookies = r.headers["set-cookie"];
  * const resultWithCookies = await client.scrape({
  *  url: 'https://example.com/some_path',
- *  render_js: true,
  *  cookies: cookies,
  * })
  */
 export class GetScrapingClient {
-    /**
-     * The api_url for your GetScraping Deployment
-     * You can find this at https://getscraping.com/dashboard
-     */
-    private api_url: string;
-    /**
-     * The api_key for your GetScraping Deployment
-     * You can find this at https://getscraping.com/dashboard
-     */
+    private api_url: string = 'https://api.getscraping.io';
     private api_key: string;
 
     /**
      * 
-     * @param api_url The api_url for your GetScraping Deployment. You can find this at https://getscraping.com/dashboard
-     * @param api_key The api_key for your GetScraping Deployment. You can find this at https://getscraping.com/dashboard
+     * @param api_key The api_key for your GetScraping subscription. You can find this at https://getscraping.com/dashboard
      */
-    constructor(api_url: string, api_key: string) {
-        this.api_url = api_url;
+    constructor(api_key: string) {
         this.api_key = api_key;
     }
 
@@ -68,7 +56,6 @@ export class GetScrapingClient {
     }
 
     /**
-     * scrape will make a request through your GetScraping deployed API.
      * @param params GetScrapingParams
      * @returns Promise<Response>
      */
@@ -94,7 +81,7 @@ async function fetchRetry(url: string, retry_config?: RetryConfig, init?: Reques
                     continue;
                 }
             } else {
-                if (![200,302].includes(res.status)) {
+                if (![200, 302].includes(res.status)) {
                     await sleep(RETRY_DELAY_MS)
                     if (retriesRemaining <= 1) {
                         return res;
