@@ -202,7 +202,7 @@ export type ProgrammableBrowserAction = {
     /**
      * The type of action to perform
      */
-    type: 'click' | 'hover' | 'wait_for_selector' | 'wait_for_navigation' | 'wait_millis' | 'scroll' | 'execute_js';
+    type: 'click' | 'hover' | 'wait_for_selector' | 'wait_millis' | 'scroll' | 'execute_js';
 
     /**
      * The selector that triggers the action, and the target of the action if the type is click, hover, or scroll
@@ -215,6 +215,7 @@ export type ProgrammableBrowserAction = {
      * `javascript: "console.log('YEET')`
      */
     javascript?: string;
+
     /**
      * The amount of time to wait for the action to complete
      */
