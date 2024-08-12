@@ -129,7 +129,6 @@ For more detailed information on these parameters, please refer to the [GetScrap
 ## Examples
 
 ### Basic Scraping
-
 ```javascript
 const result = await client.scrape({
   url: 'https://example.com',
@@ -141,7 +140,8 @@ console.log(html);
 ```
 
 ### Scraping with JavaScript Rendering
-
+Render Javascript to scrape dynamic sites.
+Note rendering JS will incur an additional cost (5 requests)
 ```javascript
 const result = await client.scrape({
   url: 'https://example.com',
@@ -156,8 +156,10 @@ const html = await result.text();
 console.log(html);
 ```
 
-### Using Proxies
+### Using Various Proxies
+Typically the best proxy type for bypassing tough anti-bot measures is mobile, then residential, then ISP, and lastly our default proxies. 
 
+We recommend trying request with the default to start and working your way up as necessary as non-default proxies incur additional costs (costs are: 1 request for default proxies, 5 requests for ISP proxies, 25 for residential, and 50 for mobile).
 ```javascript
 const result = await client.scrape({
   url: 'https://example.com',
