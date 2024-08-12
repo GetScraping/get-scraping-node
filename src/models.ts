@@ -83,12 +83,6 @@ export type JavascriptRenderingOptions = {
      * Default false
      */
     render_js: boolean;
-    /**
-    * Whether to capture a screenshot
-    * The URL of the screenshot in s3 will be returned in the SCREENSHOT_LOCATION header in addition to the HTML.
-    * Only valid when render_js is true.
-    */
-    screenshot?: boolean;
 
     /**
      * The time in milliseconds to wait before returning the result.
@@ -208,13 +202,19 @@ export type ProgrammableBrowserAction = {
     /**
      * The type of action to perform
      */
-    type: 'click' | 'hover' | 'wait_for_selector' | 'wait_for_request' | 'wait_for_navigation' | 'scroll';
+    type: 'click' | 'hover' | 'wait_for_selector' | 'wait_for_navigation' | 'wait_millis' | 'scroll' | 'execute_js';
 
     /**
      * The selector that triggers the action, and the target of the action if the type is click, hover, or scroll
      */
     selector?: string;
 
+    /**
+     * The javascript to execute.
+     * example:
+     * `javascript: "console.log('YEET')`
+     */
+    javascript?: string;
     /**
      * The amount of time to wait for the action to complete
      */
