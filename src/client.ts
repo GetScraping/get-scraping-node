@@ -41,6 +41,7 @@ export class GetScrapingClient {
                 method: 'POST',
                 headers: {
                     'X-API-Key': this.api_key,
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(params),
             })
@@ -49,6 +50,7 @@ export class GetScrapingClient {
             method: 'POST',
             headers: {
                 'X-API-Key': this.api_key,
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify(params),
         })
