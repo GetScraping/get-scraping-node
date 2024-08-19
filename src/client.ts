@@ -36,24 +36,18 @@ export class GetScrapingClient {
     }
 
     private async request(url: string, params: GetScrapingParams): Promise<Response> {
-        if (params?.retry_config != null) {
-            return fetchRetry(url, params?.retry_config, {
-                method: 'POST',
-                headers: {
-                    'X-API-Key': this.api_key,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(params),
-            })
-        }
-        return fetch(url, {
+        const requestOptions: RequestInit = {
             method: 'POST',
             headers: {
                 'X-API-Key': this.api_key,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(params),
-        })
+        }
+        if (params?.retry_config != null) {
+            return fetchRetry(url, params?.retry_config, requestOptions)
+        }
+        return fetch(url, requestOptions)
 
     }
 
@@ -83,7 +77,7 @@ async function fetchRetry(url: string, retry_config?: RetryConfig, init?: Reques
                     continue;
                 }
             } else {
-                if (![200, 302].includes(res.status)) {
+                if (res.status < 200 || res.status > 399) {
                     await sleep(RETRY_DELAY_MS)
                     if (retriesRemaining <= 1) {
                         return res;

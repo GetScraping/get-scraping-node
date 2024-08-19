@@ -173,7 +173,7 @@ export type RetryConfig = {
 
     /**
      * The status codes that will render the request successful
-     * default: [200-302]
+     * default: [200-399]
      */
     success_status_codes?: Array<number>;
 
