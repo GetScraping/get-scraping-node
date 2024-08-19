@@ -43,6 +43,7 @@ export class GetScrapingClient {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(params),
+            compress: false,
         }
         if (params?.retry_config != null) {
             return fetchRetry(url, params?.retry_config, requestOptions)
