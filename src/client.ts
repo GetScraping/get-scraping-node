@@ -36,6 +36,9 @@ export class GetScrapingClient {
     }
 
     private async request(url: string, params: GetScrapingParams): Promise<Response> {
+        const controller = new AbortController()
+        const signal = controller.signal
+        setTimeout(() => controller.abort(), params.timeout_millis ?? 30000)
         const requestOptions: RequestInit = {
             method: 'POST',
             headers: {
@@ -45,8 +48,9 @@ export class GetScrapingClient {
             body: JSON.stringify(params),
             compress: false,
             insecureHTTPParser: true,
-            signal: AbortSignal.timeout(params.timeout_millis ?? 30000)
+            signal,
         }
+
         if (params?.retry_config != null) {
             return fetchRetry(url, params?.retry_config, requestOptions)
         }
