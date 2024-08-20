@@ -11,6 +11,12 @@ export type GetScrapingParams = {
     method: 'GET' | 'POST';
 
     /**
+     * The expected response type
+     * One of 'json' | 'buffer' | 'text'
+     * Defaults to 'text'.
+     */
+    response_type?: 'json' | 'buffer' | 'text';
+    /**
      * The payload to include in a post request.
      * Only used when method = 'POST'
      */
