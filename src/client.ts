@@ -44,6 +44,8 @@ export class GetScrapingClient {
             },
             body: JSON.stringify(params),
             compress: false,
+            insecureHTTPParser: true,
+            signal: AbortSignal.timeout(params.timeout_millis ?? 30000)
         }
         if (params?.retry_config != null) {
             return fetchRetry(url, params?.retry_config, requestOptions)
