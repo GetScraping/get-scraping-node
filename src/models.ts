@@ -73,6 +73,7 @@ export type GetScrapingParams = {
 
     /**
      * How long to wait for the request to complete in milliseconds before returning a timeout error. 
+     * Default: 30 seconds
      */
     timeout_millis?: number;
 }
