@@ -41,6 +41,7 @@ export class GetScrapingClient {
             headers: {
                 'X-API-Key': this.api_key,
                 'Content-Type': 'application/json',
+                'Accept': '*/*',
             },
             body: JSON.stringify(params),
             compress: false,
